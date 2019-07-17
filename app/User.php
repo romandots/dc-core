@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -50,4 +49,14 @@ class User extends Authenticatable
         'approved_at' => 'datetime',
         'seen_at' => 'datetime',
     ];
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username(): string
+    {
+        return 'username';
+    }
 }
