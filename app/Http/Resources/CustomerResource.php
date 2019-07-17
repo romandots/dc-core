@@ -27,6 +27,17 @@ class CustomerResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'person' => $this->whenLoaded('person', function () {
+                return $this->person;
+            }),
+            'contract' => $this->whenLoaded('contract', function () {
+                return $this->contract;
+            }),
+            'seen_at' => $this->seen_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString()
+        ];
     }
 }

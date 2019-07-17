@@ -21,12 +21,24 @@ class InstructorResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request): array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'person' => $this->whenLoaded('person', function () {
+                return $this->person;
+            }),
+            'description' => $this->description,
+            'picture' => $this->picture,
+            'display' => (bool)$this->display,
+            'status' => $this->status,
+            'status_label' => \trans($this->status),
+            'seen_at' => $this->seen_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString()
+        ];
     }
 }

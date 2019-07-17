@@ -17,16 +17,15 @@ use Spatie\Permission\Traits\HasRoles;
  * Class Student
  *
  * @package App\Models
- * @package int $id
- * @package string $name
- * @package string $description
- * @package string $picture
- * @package string $status [potential|active|recent|former]
- * @package bool $display
- * @package int $person_id
- * @package \Carbon\Carbon $seen_at
- * @package \Carbon\Carbon $created_at
- * @package \Carbon\Carbon $updated_at
+ * @property int $id
+ * @property string $name
+ * @property int $card_number
+ * @property string $status [potential|active|recent|former]
+ * @property int $person_id
+ * @property int $customer_id
+ * @property \Carbon\Carbon $seen_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \App\Models\Customer $customer
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \App\Models\Person $person

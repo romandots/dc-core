@@ -17,13 +17,13 @@ use Spatie\Permission\Traits\HasRoles;
  * Class Customer
  *
  * @package App\Models
- * @package int $id
- * @package string $name
- * @package int $person_id
- * @package int $contract_id
- * @package \Carbon\Carbon $seen_at
- * @package \Carbon\Carbon $created_at
- * @package \Carbon\Carbon $updated_at
+ * @property int $id
+ * @property string $name
+ * @property int $person_id
+ * @property int $contract_id
+ * @property \Carbon\Carbon $seen_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \App\Models\Contract $contract
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \App\Models\Person $person

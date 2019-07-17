@@ -27,6 +27,20 @@ class StudentResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'person' => $this->whenLoaded('person', function () {
+                return $this->person;
+            }),
+            'customer' => $this->whenLoaded('customer', function () {
+                return $this->customer;
+            }),
+            'card_number' => $this->card_number,
+            'status' => $this->status,
+            'status_label' => \trans($this->status),
+            'seen_at' => $this->seen_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString()
+        ];
     }
 }

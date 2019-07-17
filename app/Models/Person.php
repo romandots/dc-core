@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $last_name
  * @property string $first_name
  * @property string $patronymic_name
- * @property Carbon $birth_date
+ * @property \Carbon\Carbon $birth_date
  * @property string $gender [male|female]
  * @property string $phone
  * @property string $email

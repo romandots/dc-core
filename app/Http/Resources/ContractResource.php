@@ -32,6 +32,7 @@ class ContractResource extends JsonResource
             'number' => $this->number,
             'branch_id' => $this->branch_id,
             'status' => $this->status,
+            'status_label' => \trans($this->status),
             'created_at' => $this->terminated_at->toDateTimeString(),
             'signed_at' => $this->signed_at->toDateTimeString(),
             'terminated_at' => $this->terminated_at->toDateTimeString(),

@@ -28,7 +28,8 @@ class CreatePeopleTables extends Migration
             $table->string('serial')->index();
             $table->string('number')->index();
             $table->string('branch_id')->nullable()->index();
-            $table->enum('status', ['pending', 'signed', 'terminated']);
+            $table->enum('status', \App\Models\Contract::STATUSES)
+                ->default(\App\Models\Contract::STATUS_PENDING);
             $table->timestamp('signed_at')->nullable();
             $table->timestamp('terminated_at')->nullable();
             $table->timestamps();
@@ -42,7 +43,7 @@ class CreatePeopleTables extends Migration
             $table->string('first_name')->nullable();
             $table->string('patronymic_name')->nullable();
             $table->date('birth_date')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->enum('gender', \App\Models\Person::GENDER)->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('picture')->nullable();
@@ -82,7 +83,8 @@ class CreatePeopleTables extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->unsignedInteger('card_number')->nullable();
-            $table->enum('status', ['potential', 'active', 'recent', 'former'])->nullable();
+            $table->enum('status', \App\Models\Student::STATUSES)
+                ->default(\App\Models\Student::STATUS_POTENTIAL);
             $table->unsignedInteger('person_id')->nullable()->index();
             $table->unsignedInteger('customer_id')->nullable()->index();
             $table->timestamp('seen_at')->nullable();
@@ -104,7 +106,8 @@ class CreatePeopleTables extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('picture')->nullable();
-            $table->enum('status', ['hired', 'freelance', 'fired'])->nullable();
+            $table->enum('status', \App\Models\Instructor::STATUSES)
+                ->default(\App\Models\Instructor::STATUS_HIRED);
             $table->boolean('display')->default(true);
             $table->unsignedInteger('person_id')->nullable()->index();
             $table->timestamp('seen_at')->nullable();
