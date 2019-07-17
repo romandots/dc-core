@@ -7,9 +7,9 @@
  */
 declare(strict_types=1);
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use \Spatie\Permission\Models\Role;
-use \App\User;
+use Spatie\Permission\Models\Role;
 
 /**
  * Class UsersTableSeeder
