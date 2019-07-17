@@ -104,7 +104,7 @@ class CreatePeopleTables extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('picture')->nullable();
-            $table->enum('status', ['potential', 'active', 'recent', 'former'])->nullable();
+            $table->enum('status', ['hired', 'freelance', 'fired'])->nullable();
             $table->boolean('display')->default(true);
             $table->unsignedInteger('person_id')->nullable()->index();
             $table->timestamp('seen_at')->nullable();

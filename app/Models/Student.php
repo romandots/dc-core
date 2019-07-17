@@ -17,6 +17,16 @@ use Spatie\Permission\Traits\HasRoles;
  * Class Student
  *
  * @package App\Models
+ * @package int $id
+ * @package string $name
+ * @package string $description
+ * @package string $picture
+ * @package string $status [potential|active|recent|former]
+ * @package bool $display
+ * @package int $person_id
+ * @package \Carbon\Carbon $seen_at
+ * @package \Carbon\Carbon $created_at
+ * @package \Carbon\Carbon $updated_at
  * @property-read \App\Models\Customer $customer
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \App\Models\Person $person
@@ -33,6 +43,17 @@ class Student extends Model
     use HasRoles;
 
     public const TABLE = 'students';
+
+    public const STATUS_POTENTIAL = 'potential';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_RECENT = 'recent';
+    public const STATUS_FORMER = 'former';
+    public const STATUSES = [
+        self::STATUS_POTENTIAL,
+        self::STATUS_ACTIVE,
+        self::STATUS_RECENT,
+        self::STATUS_FORMER
+    ];
 
     protected $table = self::TABLE;
 

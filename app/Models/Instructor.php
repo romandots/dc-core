@@ -17,6 +17,15 @@ use Spatie\Permission\Traits\HasRoles;
  * Class Instructor
  *
  * @package App\Models
+ * @package int $id
+ * @package string $name
+ * @package int $card_number
+ * @package string $status [hired|freelance|fired]
+ * @package int $person_id
+ * @package int $customer_id
+ * @package \Carbon\Carbon $seen_at
+ * @package \Carbon\Carbon $created_at
+ * @package \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \App\Models\Person $person
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
@@ -32,6 +41,15 @@ class Instructor extends Model
     use HasRoles;
 
     public const TABLE = 'instructors';
+
+    public const STATUS_HIRED = 'hired';
+    public const STATUS_FREELANCE = 'freelance';
+    public const STATUS_FIRED = 'fired';
+    public const STATUSES = [
+        self::STATUS_HIRED,
+        self::STATUS_FREELANCE,
+        self::STATUS_FIRED
+    ];
 
     protected $table = self::TABLE;
 
