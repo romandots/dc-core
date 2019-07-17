@@ -27,6 +27,12 @@ class UserResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [];
+        return [
+            'name' => $this->name,
+            'username' => $this->username,
+            'created_at' => $this->created_at ? $this->created_at->toDateTimeString() : '',
+            'approved_at' => $this->approved_at ? $this->approved_at->toDateTimeString() : '',
+            'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : '',
+        ];
     }
 }
