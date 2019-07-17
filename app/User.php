@@ -1,14 +1,27 @@
 <?php
+/**
+ * File: User.php
+ * Author: Roman Dots <ram.d.kreiz@gmail.com>
+ * Date: 2019-07-17
+ * Copyright (c) 2019
+ */
+
+declare(strict_types=1);
 
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +29,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'username', 'password',
     ];
 
     /**
@@ -34,6 +47,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'seen_at' => 'datetime',
     ];
 }
