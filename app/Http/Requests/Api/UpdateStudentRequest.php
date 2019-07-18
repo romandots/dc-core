@@ -28,7 +28,7 @@ class UpdateStudentRequest extends FormRequest
         return [
             'card_number' => [
                 'nullable',
-                'number',
+                'integer',
                 Rule::unique(Student::TABLE)
             ],
         ];
@@ -41,7 +41,7 @@ class UpdateStudentRequest extends FormRequest
     {
         $validated = $this->validated();
         $dto = new DTO\UpdateStudent;
-        $dto->card_number = $validated['card_number'];
+        $dto->card_number = isset($validated['card_number']) ?? $validated['card_number'];
 
         return $dto;
     }

@@ -21,6 +21,20 @@ use App\Models\Student;
 class StudentRepository
 {
     /**
+     * @var PersonRepository
+     */
+    protected $personRepository;
+
+    /**
+     * StudentRepository constructor.
+     * @param PersonRepository $personRepository
+     */
+    public function __construct(PersonRepository $personRepository)
+    {
+        $this->personRepository = $personRepository;
+    }
+
+    /**
      * @param int $id
      * @return Student|null
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
@@ -41,6 +55,7 @@ class StudentRepository
         $student->person_id = $person->id;
         $student->name = "{$person->last_name} {$person->first_name}";
         $student->card_number = $cardNumber;
+        $student->status = Student::STATUS_POTENTIAL;
         $student->save();
 
         return $student;
@@ -65,10 +80,11 @@ class StudentRepository
      */
     public function delete(Student $student): void
     {
-        \DB::transaction(static function () use ($student) {
+        \DB::transaction(function () use ($student) {
             $person = $student->person;
             $student->person_id = null;
-            $person->delete();
+            $student->save();
+            $this->personRepository->delete($person);
             $student->delete();
         });
     }

@@ -9,13 +9,14 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Traits\CreatesFakePerson;
 
 /**
  * Class PersonTest
  */
 class PersonTest extends \Tests\TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker, RefreshDatabase, CreatesFakePerson;
 
     protected const URL = '/api/people';
     protected const JSON_STRUCTURE = [
@@ -240,7 +241,7 @@ class PersonTest extends \Tests\TestCase
         ];
     }
 
-    public function testDelete(): void
+    public function testDestroy(): void
     {
         $person = $this->createFakePerson();
 
@@ -251,14 +252,5 @@ class PersonTest extends \Tests\TestCase
             ->assertOk();
 
         $this->assertDatabaseMissing(\App\Models\Person::TABLE, ['id' => $person->id]);
-    }
-
-    /**
-     * @param array|null $attributes
-     * @return \App\Models\Person
-     */
-    private function createFakePerson(array $attributes = null): \App\Models\Person
-    {
-        return \factory(\App\Models\Person::class)->create($attributes ?: []);
     }
 }

@@ -58,6 +58,10 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'seen_at' => 'datetime'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Person|null
      */

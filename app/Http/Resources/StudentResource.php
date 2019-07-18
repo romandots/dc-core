@@ -31,15 +31,15 @@ class StudentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'person' => $this->whenLoaded('person', function () {
-                return $this->person;
+                return new PersonResource($this->person);
             }),
             'customer' => $this->whenLoaded('customer', function () {
-                return $this->customer;
+                return new CustomerResource($this->customer);
             }),
             'card_number' => $this->card_number,
             'status' => $this->status,
             'status_label' => \trans($this->status),
-            'seen_at' => $this->seen_at->toDateTimeString(),
+            'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];
     }

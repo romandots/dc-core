@@ -15,6 +15,7 @@ use App\Http\Requests\Api\AttachStudentRequest;
 use App\Http\Requests\Api\StoreStudentRequest;
 use App\Http\Requests\Api\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
+use App\Models\Student;
 use App\Repository\PersonRepository;
 use App\Repository\StudentRepository;
 
@@ -51,10 +52,12 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request): StudentResource
     {
-        $student = \DB::transaction(static function () use ($request) {
+        /** @var Student $student */
+        $student = \DB::transaction(function () use ($request) {
             $person = $this->personRepository->create($request->getPersonDto());
             return $this->studentRepository->create($person, $request->getStudentDto()->card_number);
         });
+        $student->load('customer', 'person');
 
         return new StudentResource($student);
     }
@@ -69,6 +72,7 @@ class StudentController extends Controller
         $attachStudent = $request->getDto();
         $person = $this->personRepository->find($attachStudent->person_id);
         $student = $this->studentRepository->create($person, $attachStudent->card_number);
+        $student->load('customer', 'person');
 
         return new StudentResource($student);
     }
@@ -81,6 +85,7 @@ class StudentController extends Controller
     public function show(int $id): StudentResource
     {
         $student = $this->studentRepository->find($id);
+        $student->load('customer', 'person');
 
         return new StudentResource($student);
     }
@@ -95,6 +100,7 @@ class StudentController extends Controller
     {
         $student = $this->studentRepository->find($id);
         $this->studentRepository->update($student, $request->getDto());
+        $student->load('customer', 'person');
 
         return new StudentResource($student);
     }
@@ -105,7 +111,7 @@ class StudentController extends Controller
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function delete(int $id): StudentResource
+    public function destroy(int $id): StudentResource
     {
         $student = $this->studentRepository->find($id);
         $this->studentRepository->delete($student);
