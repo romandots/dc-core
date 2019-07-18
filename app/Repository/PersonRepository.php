@@ -20,7 +20,6 @@ use Carbon\Carbon;
  */
 class PersonRepository
 {
-
     /**
      * @param int $id
      * @return Person|null
