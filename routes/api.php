@@ -28,3 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('people', 'PersonController')
     ->only(['show', 'store', 'update', 'delete']);
+
+Route::resource('students', 'StudentController')
+    ->only(['show', 'store', 'update', 'delete']);
+Route::post('students/from_person', 'StudentController@attach');

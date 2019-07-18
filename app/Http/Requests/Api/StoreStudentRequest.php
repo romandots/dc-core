@@ -1,24 +1,25 @@
 <?php
 /**
- * File: StorePersonRequest.php
+ * File: StoreStudentRequest.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
- * Date: 2019-07-17
+ * Date: 2019-07-18
  * Copyright (c) 2019
  */
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use App\Models\Person;
+use App\Models\Student;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class StorePersonRequest
- * @package App\Http\Requests
+ * Class StoreStudentRequest
+ * @package App\Http\Requests\Api
  */
-class StorePersonRequest extends FormRequest
+class StoreStudentRequest extends FormRequest
 {
     /**
      * @return array
@@ -26,6 +27,11 @@ class StorePersonRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'card_number' => [
+                'nullable',
+                'number',
+                Rule::unique(Student::TABLE)
+            ],
             'last_name' => [
                 'nullable',
                 'string'
@@ -102,7 +108,7 @@ class StorePersonRequest extends FormRequest
     /**
      * @return DTO\StorePerson
      */
-    public function getDto(): DTO\StorePerson
+    public function getPersonDto(): DTO\StorePerson
     {
         $validated = $this->validated();
         $dto = new DTO\StorePerson;
@@ -122,6 +128,18 @@ class StorePersonRequest extends FormRequest
         $dto->facebook_uid = $validated['facebook_uid'];
         $dto->facebook_url = $validated['facebook_url'];
         $dto->note = $validated['note'];
+
+        return $dto;
+    }
+
+    /**
+     * @return DTO\StoreStudent
+     */
+    public function getStudentDto(): DTO\StoreStudent
+    {
+        $validated = $this->validated();
+        $dto = new DTO\StoreStudent;
+        $dto->card_number = $validated['card_number'];
 
         return $dto;
     }

@@ -11,8 +11,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePersonRequest;
-use App\Http\Requests\StorePersonRequest as UpdatePersonRequest;
+use App\Http\Requests\Api\StorePersonRequest;
+use App\Http\Requests\Api\StorePersonRequest as UpdatePersonRequest;
 use App\Http\Resources\PersonResource;
 use App\Repository\PersonRepository;
 
