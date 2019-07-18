@@ -18,6 +18,7 @@ use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use App\Repository\PersonRepository;
 use App\Repository\StudentRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class StudentController
@@ -53,7 +54,7 @@ class StudentController extends Controller
     public function store(StoreStudentRequest $request): StudentResource
     {
         /** @var Student $student */
-        $student = \DB::transaction(function () use ($request) {
+        $student = DB::transaction(function () use ($request) {
             $person = $this->personRepository->create($request->getPersonDto());
             return $this->studentRepository->create($person, $request->getStudentDto()->card_number);
         });
@@ -67,7 +68,7 @@ class StudentController extends Controller
      * @return StudentResource
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function attach(AttachStudentRequest $request): StudentResource
+    public function createFromPerson(AttachStudentRequest $request): StudentResource
     {
         $attachStudent = $request->getDto();
         $person = $this->personRepository->find($attachStudent->person_id);

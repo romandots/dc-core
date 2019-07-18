@@ -30,7 +30,7 @@ class AttachStudentRequest extends FormRequest
             'card_number' => [
                 'required',
                 'integer',
-                Rule::unique(Student::TABLE)->ignore($this->input('id'))
+                Rule::unique(Student::TABLE)->ignore($this->input('person_id'), 'person_id')
             ],
             'person_id' => [
                 'required',

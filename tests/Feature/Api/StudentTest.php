@@ -149,6 +149,47 @@ class StudentTest extends \Tests\TestCase
             ->assertStatus(422);
     }
 
+    public function testCreateFromPerson(): void
+    {
+        $person = $this->createFakePerson();
+        $data = [
+            'card_number' => 9999,
+            'person_id' => $person->id
+        ];
+        $url = self::URL . '/from_person';
+
+        $this
+            ->post($url, $data)
+            ->assertStatus(201)
+            ->assertJsonStructure(self::JSON_STRUCTURE)
+            ->assertJson([
+                'data' => [
+                    'name' => "{$person->last_name} {$person->first_name}",
+                    'card_number' => 9999,
+                    'status' => \App\Models\Student::STATUS_POTENTIAL,
+                    'person' => [
+                        'id' => $person->id,
+                        'last_name' => $person->last_name,
+                        'first_name' => $person->first_name,
+                        'patronymic_name' => $person->patronymic_name,
+                        'birth_date' => $person->birth_date ? $person->birth_date->toDateString() : null,
+                        'gender' => $person->gender,
+                        'phone' => $person->phone,
+                        'email' => $person->email,
+                        'picture' => $person->picture,
+                        'picture_thumb' => $person->picture_thumb,
+                        'instagram_username' => $person->instagram_username,
+                        'telegram_username' => $person->telegram_username,
+                        'vk_uid' => $person->vk_uid,
+                        'vk_url' => $person->vk_url,
+                        'facebook_uid' => $person->facebook_uid,
+                        'facebook_url' => $person->facebook_url,
+                        'note' => $person->note,
+                        'created_at' => $person->created_at->toDateTimeString()
+                    ]
+                ]
+            ]);
+    }
 
     /**
      * @return array

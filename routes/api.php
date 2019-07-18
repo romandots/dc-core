@@ -31,4 +31,8 @@ Route::resource('people', 'PersonController')
 
 Route::resource('students', 'StudentController')
     ->only(['show', 'store', 'update', 'destroy']);
-Route::post('students/from_person', 'StudentController@attach');
+Route::post('students/from_person', 'StudentController@createFromPerson');
+
+Route::resource('instructors', 'InstructorController')
+    ->only(['show', 'store', 'update', 'destroy']);
+Route::post('instructors/from_person', 'InstructorController@createFromPerson');
