@@ -14,9 +14,12 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
-        "spatie/laravel-permission": "^2.37"
+        "spatie/laravel-permission": "^2.37",
+        "ext-pdo": "*"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-master"
+        ,
         "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
@@ -41,6 +44,9 @@
         "classmap": [
             "database/seeds",
             "database/factories"
+        ],
+        "files": [
+            "app/Support/helpers.php"
         ]
     },
     "autoload-dev": {
