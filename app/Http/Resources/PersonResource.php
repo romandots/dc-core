@@ -31,7 +31,7 @@ class PersonResource extends JsonResource
             'last_name' => $this->last_name,
             'first_name' => $this->first_name,
             'patronymic_name' => $this->patronymic_name,
-            'birth_date' => $this->birth_date,
+            'birth_date' => $this->birth_date ?  $this->birth_date->toDateString() : null,
             'gender' => $this->gender,
             'phone' => $this->phone,
             'email' => $this->email,

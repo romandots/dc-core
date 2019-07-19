@@ -30,14 +30,14 @@ class InstructorResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'person' => $this->whenLoaded('person', function () {
-                return $this->person;
+                return new PersonResource($this->person);
             }),
             'description' => $this->description,
             'picture' => $this->picture,
             'display' => (bool)$this->display,
             'status' => $this->status,
             'status_label' => \trans($this->status),
-            'seen_at' => $this->seen_at->toDateTimeString(),
+            'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];
     }

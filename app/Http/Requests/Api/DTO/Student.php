@@ -1,6 +1,6 @@
 <?php
 /**
- * File: UpdateStudent.php
+ * File: StoreStudent.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
  * Date: 2019-07-18
  * Copyright (c) 2019
@@ -11,10 +11,10 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api\DTO;
 
 /**
- * Class UpdateStudent
+ * Class StoreStudent
  * @package App\Http\Requests\Api\DTO
  */
-class UpdateStudent
+class Student
 {
     /**
      * @var int

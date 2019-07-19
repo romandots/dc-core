@@ -1,37 +1,38 @@
 <?php
 /**
- * File: StudentTest.php
+ * File: InstructorTest.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
- * Date: 2019-07-18
+ * Date: 2019-07-19
  * Copyright (c) 2019
  */
 declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Traits\CreatesFakeInstructor;
 use Tests\Traits\CreatesFakePerson;
-use Tests\Traits\CreatesFakeStudent;
 
 /**
  * Class PersonTest
  */
-class StudentTest extends \Tests\TestCase
+class InstructorTest extends \Tests\TestCase
 {
-    use WithFaker, RefreshDatabase, CreatesFakePerson, CreatesFakeStudent;
+    use WithFaker, RefreshDatabase, CreatesFakePerson, CreatesFakeInstructor;
 
-    protected const URL = '/api/students';
+    protected const URL = '/api/instructors';
 
     protected const JSON_STRUCTURE = [
         'data' => [
             'id',
             'name',
             'person',
-            'customer',
-            'card_number',
+            'description',
+            'picture',
+            'display',
             'status',
             'status_label',
             'seen_at',
-            'created_at'
+            'created_at',
         ]
     ];
 
@@ -43,18 +44,18 @@ class StudentTest extends \Tests\TestCase
 
     public function testShow(): void
     {
-        $student = $this->createFakeStudent(['status' => \App\Models\Student::STATUS_POTENTIAL]);
-        $person = $student->person;
+        $instructor = $this->createFakeInstructor(['status' => \App\Models\Instructor::STATUS_HIRED]);
+        $person = $instructor->person;
 
-        $url = self::URL . '/' . $student->id;
+        $url = self::URL . '/' . $instructor->id;
 
         $this
             ->get($url)
             ->assertOk()
             ->assertJson([
                 'data' => [
-                    'id' => $student->id,
-                    'name' => $student->name,
+                    'id' => $instructor->id,
+                    'name' => $instructor->name,
                     'person' => [
                         'id' => $person->id,
                         'last_name' => $person->last_name,
@@ -75,10 +76,10 @@ class StudentTest extends \Tests\TestCase
                         'note' => $person->note,
                         'created_at' => $person->created_at->toDateTimeString()
                     ],
-                    'status' => $student->status,
-                    'status_label' => \trans($student->status),
-                    'seen_at' => $student->seen_at->toDateTimeString(),
-                    'created_at' => $student->created_at->toDateTimeString()
+                    'status' => $instructor->status,
+                    'status_label' => \trans($instructor->status),
+                    'seen_at' => $instructor->seen_at->toDateTimeString(),
+                    'created_at' => $instructor->created_at->toDateTimeString()
                 ]
             ]);
     }
@@ -86,7 +87,9 @@ class StudentTest extends \Tests\TestCase
     public function testStore(): void
     {
         $data = [
-            'card_number' => 9999,
+            'status' => \App\Models\Instructor::STATUS_HIRED,
+            'description' => 'Some teacher info',
+            'display' => true,
             'last_name' => 'Иванов',
             'first_name' => 'Иван',
             'patronymic_name' => 'Иванович',
@@ -111,7 +114,10 @@ class StudentTest extends \Tests\TestCase
             ->assertJsonStructure(self::JSON_STRUCTURE)
             ->assertJson([
                 'data' => [
-                    'card_number' => 9999,
+                    'status' => \App\Models\Instructor::STATUS_HIRED,
+                    'status_label' => \trans(\App\Models\Instructor::STATUS_HIRED),
+                    'description' => 'Some teacher info',
+                    'display' => true,
                     'name' => 'Иванов Иван',
                     'person' =>
                         [
@@ -132,8 +138,6 @@ class StudentTest extends \Tests\TestCase
                             'facebook_url' => 'https://facebook.com/mark',
                             'note' => 'Some testy note',
                         ],
-                    'status' => 'potential',
-                    'status_label' => 'potential'
                 ]
             ]);
     }
@@ -149,12 +153,42 @@ class StudentTest extends \Tests\TestCase
             ->assertStatus(422);
     }
 
+    /**
+     * @return array
+     */
+    public function provideInvalidStoreData(): array
+    {
+        return [
+            [
+                [
+                    'status' => 'impossible',
+                    'display' => true
+                ],
+            ],
+            [
+                [
+                    'description' => 'Описание',
+                    'display' => true
+                ],
+            ],
+            [
+                [
+                    'status' => 'hired',
+                    'display' => 'true'
+                ],
+            ],
+        ];
+    }
+
+
     public function testCreateFromPerson(): void
     {
         $person = $this->createFakePerson();
         $data = [
-            'card_number' => 9999,
-            'person_id' => $person->id
+            'status' => \App\Models\Instructor::STATUS_HIRED,
+            'description' => 'Some teacher info',
+            'display' => true,
+            'person_id' => $person->id,
         ];
         $url = self::URL . '/from_person';
 
@@ -165,8 +199,9 @@ class StudentTest extends \Tests\TestCase
             ->assertJson([
                 'data' => [
                     'name' => "{$person->last_name} {$person->first_name}",
-                    'card_number' => 9999,
-                    'status' => \App\Models\Student::STATUS_POTENTIAL,
+                    'status' => \App\Models\Instructor::STATUS_HIRED,
+                    'description' => 'Some teacher info',
+                    'display' => true,
                     'person' => [
                         'id' => $person->id,
                         'last_name' => $person->last_name,
@@ -191,53 +226,22 @@ class StudentTest extends \Tests\TestCase
             ]);
     }
 
-    /**
-     * @return array
-     */
-    public function provideInvalidStoreData(): array
-    {
-        return [
-            [
-                [
-                    'last_name' => 'Иванов',
-                    'patronymic_name' => 'Иванович',
-                    'birth_date' => '1986-06-15',
-                ],
-            ],
-            [
-                [
-                    'first_name' => 'Иван',
-                    'vk_url' => 'some text',
-                ],
-            ],
-            [
-                [
-                    'first_name' => 'Иван',
-                    'facebook_url' => 'no url',
-                ],
-            ],
-            [
-                [
-                    'first_name' => 'Иван',
-                    'email' => 'not an email',
-                ]
-            ],
-            [
-                [
-                    'card_number' => 'Иван',
-                ]
-            ],
-        ];
-    }
-
     public function testUpdate(): void
     {
-        $data = ['card_number' => 1234];
+        $data = [
+            'status' => \App\Models\Instructor::STATUS_FIRED,
+            'description' => 'Some other info',
+            'display' => false,
+        ];
 
-        $student = $this->createFakeStudent(['card_number' => 9999]);
-        $person = $student->person;
+        $instructor = $this->createFakeInstructor([
+            'status' => \App\Models\Instructor::STATUS_HIRED,
+            'description' => 'Some teacher info',
+            'display' => true,
+        ]);
+        $person = $instructor->person;
 
-        $url = self::URL . '/' . $student->id;
+        $url = self::URL . '/' . $instructor->id;
 
         $this
             ->patch($url, $data)
@@ -245,9 +249,12 @@ class StudentTest extends \Tests\TestCase
             ->assertJsonStructure(self::JSON_STRUCTURE)
             ->assertJson([
                 'data' => [
-                    'card_number' => 1234,
-                    'id' => $student->id,
-                    'name' => $student->name,
+                    'id' => $instructor->id,
+                    'name' => $instructor->name,
+                    'status' => \App\Models\Instructor::STATUS_FIRED,
+                    'status_label' => \trans(\App\Models\Instructor::STATUS_FIRED),
+                    'description' => 'Some other info',
+                    'display' => false,
                     'person' => [
                         'id' => $person->id,
                         'last_name' => $person->last_name,
@@ -268,10 +275,8 @@ class StudentTest extends \Tests\TestCase
                         'note' => $person->note,
                         'created_at' => $person->created_at->toDateTimeString()
                     ],
-                    'status' => $student->status,
-                    'status_label' => \trans($student->status),
-                    'seen_at' => $student->seen_at->toDateTimeString(),
-                    'created_at' => $student->created_at->toDateTimeString()
+                    'seen_at' => $instructor->seen_at->toDateTimeString(),
+                    'created_at' => $instructor->created_at->toDateTimeString()
                 ]
             ]);
     }
@@ -282,9 +287,9 @@ class StudentTest extends \Tests\TestCase
      */
     public function testInvalidUpdate(array $data): void
     {
-        $student = $this->createFakeStudent();
+        $instructor = $this->createFakeInstructor();
 
-        $url = self::URL . '/' . $student->id;
+        $url = self::URL . '/' . $instructor->id;
 
         $this
             ->patch($url, $data)
@@ -299,24 +304,37 @@ class StudentTest extends \Tests\TestCase
         return [
             [
                 [
-                    'card_number' => 'Иван',
-                ]
+                    'status' => 'impossible',
+                    'display' => true
+                ],
+            ],
+            [
+                [
+                    'description' => 'Описание',
+                    'display' => true
+                ],
+            ],
+            [
+                [
+                    'status' => 'hired',
+                    'display' => 'true'
+                ],
             ],
         ];
     }
 
     public function testDestroy(): void
     {
-        $student = $this->createFakeStudent();
-        $person = $student->person;
+        $instructor = $this->createFakeInstructor();
+        $person = $instructor->person;
 
-        $url = self::URL . '/' . $student->id;
+        $url = self::URL . '/' . $instructor->id;
 
         $this
             ->delete($url)
             ->assertOk();
 
         $this->assertDatabaseHas(\App\Models\Person::TABLE, ['id' => $person->id]);
-        $this->assertDatabaseMissing(\App\Models\Student::TABLE, ['id' => $student->id]);
+        $this->assertDatabaseMissing(\App\Models\Instructor::TABLE, ['id' => $instructor->id]);
     }
 }

@@ -35,12 +35,12 @@ class UpdateStudentRequest extends FormRequest
     }
 
     /**
-     * @return DTO\UpdateStudent
+     * @return DTO\Student
      */
-    public function getDto(): DTO\UpdateStudent
+    public function getDto(): DTO\Student
     {
         $validated = $this->validated();
-        $dto = new DTO\UpdateStudent;
+        $dto = new DTO\Student;
         $dto->card_number = isset($validated['card_number']) ?? $validated['card_number'];
 
         return $dto;

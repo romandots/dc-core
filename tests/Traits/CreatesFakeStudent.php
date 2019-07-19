@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tests\Traits;
 
+use App\Models\Student;
+
 /**
  * Trait CreatesFakePerson
  * @package Tests\Traits
@@ -17,14 +19,14 @@ trait CreatesFakeStudent
 {
     /**
      * @param array|null $attributes
-     * @return \App\Models\Student
+     * @return Student
      */
-    private function createFakeStudent(array $attributes = []): \App\Models\Student
+    private function createFakeStudent(array $attributes = []): Student
     {
         $person = $this->createFakePerson();
         $attributes['person_id'] = $person->id;
         $attributes['customer_id'] = null;
 
-        return \factory(\App\Models\Student::class)->create($attributes);
+        return \factory(Student::class)->create($attributes);
     }
 }

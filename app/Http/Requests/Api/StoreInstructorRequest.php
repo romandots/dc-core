@@ -1,8 +1,8 @@
 <?php
 /**
- * File: StorePersonRequest.php
+ * File: StoreInstructorRequest.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
- * Date: 2019-07-18
+ * Date: 2019-07-19
  * Copyright (c) 2019
  */
 
@@ -10,15 +10,16 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
+use App\Models\Instructor;
 use App\Models\Person;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class StorePersonRequest
- * @package App\Http\Requests
+ * Class StoreInstructorRequest
+ * @package App\Http\Requests\Api
  */
-class StorePersonRequest extends FormRequest
+class StoreInstructorRequest extends FormRequest
 {
     /**
      * @return array
@@ -26,8 +27,21 @@ class StorePersonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'last_name' => [
+            'description' => [
                 'nullable',
+                'string'
+            ],
+            'status' => [
+                'required',
+                'string',
+                Rule::in(Instructor::STATUSES)
+            ],
+            'display' => [
+                'nullable',
+                'boolean'
+            ],
+            'last_name' => [
+                'required',
                 'string'
             ],
             'first_name' => [
@@ -84,10 +98,11 @@ class StorePersonRequest extends FormRequest
     /**
      * @return DTO\Person
      */
-    public function getDto(): DTO\Person
+    public function getPersonDto(): DTO\Person
     {
         $validated = $this->validated();
-        $dto = new \App\Http\Requests\Api\DTO\Person;
+
+        $dto = new DTO\Person;
         $dto->last_name = $validated['last_name'];
         $dto->first_name = $validated['first_name'];
         $dto->patronymic_name = $validated['patronymic_name'];
@@ -100,6 +115,21 @@ class StorePersonRequest extends FormRequest
         $dto->vk_url = $validated['vk_url'];
         $dto->facebook_url = $validated['facebook_url'];
         $dto->note = $validated['note'];
+
+        return $dto;
+    }
+
+    /**
+     * @return DTO\Instructor
+     */
+    public function getInstructorDto(): DTO\Instructor
+    {
+        $validated = $this->validated();
+
+        $dto = new DTO\Instructor;
+        $dto->description = $validated['description'];
+        $dto->status = $validated['status'];
+        $dto->display = (bool)$validated['display'];
 
         return $dto;
     }

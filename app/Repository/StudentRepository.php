@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Http\Requests\Api\DTO\UpdateStudent;
 use App\Models\Person;
 use App\Models\Student;
 
@@ -20,20 +19,6 @@ use App\Models\Student;
  */
 class StudentRepository
 {
-    /**
-     * @var PersonRepository
-     */
-    protected $personRepository;
-
-    /**
-     * StudentRepository constructor.
-     * @param PersonRepository $personRepository
-     */
-    public function __construct(PersonRepository $personRepository)
-    {
-        $this->personRepository = $personRepository;
-    }
-
     /**
      * @param int $id
      * @return Student|null
@@ -63,15 +48,12 @@ class StudentRepository
 
     /**
      * @param Student $person
-     * @param UpdateStudent $dto
-     * @return Student
+     * @param \App\Http\Requests\Api\DTO\Student $dto
      */
-    public function update(Student $person, UpdateStudent $dto): Student
+    public function update(Student $person, \App\Http\Requests\Api\DTO\Student $dto): void
     {
         $person->card_number = $dto->card_number;
         $person->save();
-
-        return $person;
     }
 
     /**
@@ -80,12 +62,6 @@ class StudentRepository
      */
     public function delete(Student $student): void
     {
-        \DB::transaction(function () use ($student) {
-            $person = $student->person;
-            $student->person_id = null;
-            $student->save();
-            $this->personRepository->delete($person);
-            $student->delete();
-        });
+        $student->delete();
     }
 }

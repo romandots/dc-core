@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Http\Requests\Api\DTO\StorePerson;
+use App\Http\Requests\Api\DTO\Person as PersonDto;
 use App\Models\Person;
 use Carbon\Carbon;
 
@@ -31,10 +31,10 @@ class PersonRepository
     }
 
     /**
-     * @param StorePerson $dto
+     * @param PersonDto $dto
      * @return Person
      */
-    public function create(StorePerson $dto): Person
+    public function create(PersonDto $dto): Person
     {
         $person = new Person;
         $this->fill($person, $dto);
@@ -45,10 +45,10 @@ class PersonRepository
 
     /**
      * @param Person $person
-     * @param StorePerson $dto
+     * @param PersonDto $dto
      * @return Person
      */
-    public function update(Person $person, StorePerson $dto): Person
+    public function update(Person $person, PersonDto $dto): Person
     {
         $this->fill($person, $dto);
         $person->save();
@@ -58,9 +58,9 @@ class PersonRepository
 
     /**
      * @param Person $person
-     * @param StorePerson $dto
+     * @param PersonDto $dto
      */
-    private function fill(Person $person, StorePerson $dto): void
+    private function fill(Person $person, PersonDto $dto): void
     {
         $person->last_name = $dto->last_name;
         $person->first_name = $dto->first_name;
@@ -69,13 +69,9 @@ class PersonRepository
         $person->gender = $dto->gender;
         $person->phone = $dto->phone;
         $person->email = $dto->email;
-        $person->picture = $dto->picture;
-        $person->picture_thumb = $dto->picture_thumb;
         $person->instagram_username = $dto->instagram_username;
         $person->telegram_username = $dto->telegram_username;
-        $person->vk_uid = $dto->vk_uid;
         $person->vk_url = $dto->vk_url;
-        $person->facebook_uid = $dto->facebook_uid;
         $person->facebook_url = $dto->facebook_url;
         $person->note = $dto->note;
         $person->created_at = Carbon::now();

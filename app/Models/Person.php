@@ -57,6 +57,10 @@ class Person extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne|Student|null
      */

@@ -14,7 +14,7 @@ namespace App\Http\Requests\Api\DTO;
  * Class AttachStudent
  * @package App\Http\Requests\Api\DTO
  */
-class AttachStudent
+class StudentFromPerson
 {
     /**
      * @var int
@@ -25,9 +25,4 @@ class AttachStudent
      * @var int
      */
     public $person_id;
-
-    /**
-     * @var int
-     */
-    public $customer_id;
 }

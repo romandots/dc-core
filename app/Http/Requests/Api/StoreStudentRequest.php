@@ -62,16 +62,6 @@ class StoreStudentRequest extends FormRequest
                 'string',
                 'email'
             ],
-            'picture' => [
-                'nullable',
-                'string',
-                'url'
-            ],
-            'picture_thumb' => [
-                'nullable',
-                'string',
-                'url'
-            ],
             'instagram_username' => [
                 'nullable',
                 'string'
@@ -80,18 +70,10 @@ class StoreStudentRequest extends FormRequest
                 'nullable',
                 'string'
             ],
-            'vk_uid' => [
-                'nullable',
-                'string'
-            ],
             'vk_url' => [
                 'nullable',
                 'string',
                 'url'
-            ],
-            'facebook_uid' => [
-                'nullable',
-                'string'
             ],
             'facebook_url' => [
                 'nullable',
@@ -106,12 +88,12 @@ class StoreStudentRequest extends FormRequest
     }
 
     /**
-     * @return DTO\StorePerson
+     * @return DTO\Person
      */
-    public function getPersonDto(): DTO\StorePerson
+    public function getPersonDto(): DTO\Person
     {
         $validated = $this->validated();
-        $dto = new DTO\StorePerson;
+        $dto = new DTO\Person;
         $dto->last_name = $validated['last_name'];
         $dto->first_name = $validated['first_name'];
         $dto->patronymic_name = $validated['patronymic_name'];
@@ -119,13 +101,9 @@ class StoreStudentRequest extends FormRequest
         $dto->gender = $validated['gender'];
         $dto->phone = isset($validated['phone']) ? \phone_format($validated['phone']) : null;
         $dto->email = $validated['email'];
-        $dto->picture = $validated['picture'];
-        $dto->picture_thumb = $validated['picture_thumb'];
         $dto->instagram_username = $validated['instagram_username'];
         $dto->telegram_username = $validated['telegram_username'];
-        $dto->vk_uid = $validated['vk_uid'];
         $dto->vk_url = $validated['vk_url'];
-        $dto->facebook_uid = $validated['facebook_uid'];
         $dto->facebook_url = $validated['facebook_url'];
         $dto->note = $validated['note'];
 
@@ -133,12 +111,12 @@ class StoreStudentRequest extends FormRequest
     }
 
     /**
-     * @return DTO\StoreStudent
+     * @return DTO\Student
      */
-    public function getStudentDto(): DTO\StoreStudent
+    public function getStudentDto(): DTO\Student
     {
         $validated = $this->validated();
-        $dto = new DTO\StoreStudent;
+        $dto = new DTO\Student;
         $dto->card_number = $validated['card_number'];
 
         return $dto;
