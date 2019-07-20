@@ -23,20 +23,6 @@ class CreatePeopleTables extends Migration
      */
     public function up(): void
     {
-        Schema::create('contracts', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('serial')->index();
-            $table->string('number')->index();
-            $table->string('branch_id')->nullable()->index();
-            $table->enum('status', \App\Models\Contract::STATUSES)
-                ->default(\App\Models\Contract::STATUS_PENDING);
-            $table->timestamp('signed_at')->nullable();
-            $table->timestamp('terminated_at')->nullable();
-            $table->timestamps();
-
-            $table->unique(['serial', 'number'], 'unique_serial_number');
-        });
-
         Schema::create('people', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('last_name')->nullable();
@@ -64,18 +50,12 @@ class CreatePeopleTables extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->unsignedInteger('person_id')->nullable()->index();
-            $table->unsignedInteger('contract_id')->nullable()->index();
             $table->timestamp('seen_at')->nullable();
             $table->timestamps();
 
             $table->foreign('person_id')
                 ->references('id')
                 ->on('people')
-                ->onDelete('restrict');
-
-            $table->foreign('contract_id')
-                ->references('id')
-                ->on('contracts')
                 ->onDelete('restrict');
         });
 
@@ -127,6 +107,26 @@ class CreatePeopleTables extends Migration
                 ->on('people')
                 ->onDelete('restrict');
         });
+
+        Schema::create('contracts', static function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('serial')->index();
+            $table->unsignedInteger('number')->index();
+            $table->unsignedInteger('branch_id')->nullable()->index();
+            $table->unsignedInteger('customer_id')->nullable()->index();
+            $table->enum('status', \App\Models\Contract::STATUSES)
+                ->default(\App\Models\Contract::STATUS_PENDING);
+            $table->timestamp('signed_at')->nullable();
+            $table->timestamp('terminated_at')->nullable();
+            $table->timestamps();
+
+            $table->unique(['serial', 'number'], 'unique_serial_number');
+
+            $table->foreign('customer_id')
+                ->references('id')
+                ->on('customers')
+                ->onDelete('restrict');
+        });
     }
 
     /**
@@ -140,10 +140,10 @@ class CreatePeopleTables extends Migration
             $table->dropColumn('person_id');
         });
 
+        Schema::dropIfExists('contracts');
         Schema::dropIfExists('students');
         Schema::dropIfExists('customers');
         Schema::dropIfExists('instructors');
-        Schema::dropIfExists('contracts');
         Schema::dropIfExists('people');
     }
 }
