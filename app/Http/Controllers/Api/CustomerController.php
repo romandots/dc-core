@@ -108,15 +108,12 @@ class CustomerController extends Controller
 
     /**
      * @param int $id
-     * @return CustomerResource
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function destroy(int $id): CustomerResource
+    public function destroy(int $id): void
     {
         $customer = $this->customerRepository->find($id);
         $this->customerRepository->delete($customer);
-
-        return new CustomerResource($customer);
     }
 }

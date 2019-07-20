@@ -108,15 +108,12 @@ class StudentController extends Controller
 
     /**
      * @param int $id
-     * @return StudentResource
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function destroy(int $id): StudentResource
+    public function destroy(int $id): void
     {
         $student = $this->studentRepository->find($id);
         $this->studentRepository->delete($student);
-
-        return new StudentResource($student);
     }
 }

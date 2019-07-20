@@ -108,15 +108,12 @@ class InstructorController extends Controller
 
     /**
      * @param int $id
-     * @return InstructorResource
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function destroy(int $id): InstructorResource
+    public function destroy(int $id): void
     {
         $instructor = $this->instructorRepository->find($id);
         $this->instructorRepository->delete($instructor);
-
-        return new InstructorResource($instructor);
     }
 }

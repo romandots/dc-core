@@ -75,15 +75,12 @@ class PersonController extends Controller
 
     /**
      * @param int $id
-     * @return PersonResource
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Exception
      */
-    public function destroy(int $id): PersonResource
+    public function destroy(int $id): void
     {
         $person = $this->personRepository->find($id);
         $this->personRepository->delete($person);
-
-        return new PersonResource($person);
     }
 }
