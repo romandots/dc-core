@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Customer $customer
  * @property-read \App\Models\Instructor $instructor
  * @property-read \App\Models\Student $student
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Person newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Person newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Person query()
@@ -83,5 +84,13 @@ class Person extends Model
     public function instructor(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Instructor::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|User|null
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class);
     }
 }
