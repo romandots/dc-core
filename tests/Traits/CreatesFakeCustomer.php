@@ -25,7 +25,6 @@ trait CreatesFakeCustomer
         if (!isset($attributes['person_id'])) {
             $person = $this->createFakePerson();
             $attributes['person_id'] = $person->id;
-            $attributes['contract_id'] = null;
         }
 
         return \factory(\App\Models\Customer::class)->create($attributes);

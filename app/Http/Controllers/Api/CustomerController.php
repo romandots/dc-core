@@ -13,9 +13,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AttachCustomerRequest;
 use App\Http\Requests\Api\StoreCustomerRequest;
-use App\Http\Requests\Api\UpdateCustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Repository\ContractRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\PersonRepository;
 use Illuminate\Support\Facades\DB;
@@ -37,14 +37,24 @@ class CustomerController extends Controller
     private $customerRepository;
 
     /**
+     * @var ContractRepository
+     */
+    private $contractRepository;
+
+    /**
      * CustomerController constructor.
      * @param CustomerRepository $customerRepository
      * @param PersonRepository $personRepository
+     * @param ContractRepository $contractRepository
      */
-    public function __construct(CustomerRepository $customerRepository, PersonRepository $personRepository)
-    {
+    public function __construct(
+        CustomerRepository $customerRepository,
+        PersonRepository $personRepository,
+        ContractRepository $contractRepository
+    ) {
         $this->customerRepository = $customerRepository;
         $this->personRepository = $personRepository;
+        $this->contractRepository = $contractRepository;
     }
 
     /**
@@ -56,9 +66,12 @@ class CustomerController extends Controller
         /** @var Customer $customer */
         $customer = DB::transaction(function () use ($request) {
             $person = $this->personRepository->create($request->getPersonDto());
-            return $this->customerRepository->create($person);
+            $customer = $this->customerRepository->create($person);
+            $this->contractRepository->create($customer->id);
+
+            return $customer;
         });
-        $customer->load('person');
+        $customer->load('person', 'contract');
 
         return new CustomerResource($customer);
     }
@@ -72,8 +85,13 @@ class CustomerController extends Controller
     {
         $dto = $request->getDto();
         $person = $this->personRepository->find($dto->person_id);
-        $customer = $this->customerRepository->create($person);
-        $customer->load('person');
+        $customer = DB::transaction(function () use ($person) {
+            $customer = $this->customerRepository->create($person);
+            $this->contractRepository->create($customer->id);
+
+            return $customer;
+        });
+        $customer->load('person', 'contract');
 
         return new CustomerResource($customer);
     }
@@ -86,21 +104,6 @@ class CustomerController extends Controller
     public function show(int $id): CustomerResource
     {
         $customer = $this->customerRepository->find($id);
-        $customer->load('person');
-
-        return new CustomerResource($customer);
-    }
-
-    /**
-     * @param int $id
-     * @param UpdateCustomerRequest $request
-     * @return CustomerResource
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
-    public function update(int $id, UpdateCustomerRequest $request): CustomerResource
-    {
-        $customer = $this->customerRepository->find($id);
-        $this->customerRepository->update($customer, $request->getDto());
         $customer->load('person');
 
         return new CustomerResource($customer);

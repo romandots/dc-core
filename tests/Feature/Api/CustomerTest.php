@@ -26,6 +26,7 @@ class CustomerTest extends \Tests\TestCase
             'id',
             'name',
             'person',
+            'contract',
             'seen_at',
             'created_at',
         ]

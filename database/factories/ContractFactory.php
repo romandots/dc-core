@@ -10,6 +10,7 @@ $factory->define(\App\Models\Contract::class, static function (Faker $faker) {
         'serial' => 'TEST',
         'number' => $faker->numerify('######'),
         'branch_id' => 1,
+        'customer_id' => 1,
         'status' => 'pending',
         'signed_at' => \Carbon\Carbon::now(),
         'terminated_at' => null,

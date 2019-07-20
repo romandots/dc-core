@@ -33,9 +33,9 @@ class ContractResource extends JsonResource
             'branch_id' => $this->branch_id,
             'status' => $this->status,
             'status_label' => \trans($this->status),
-            'created_at' => $this->terminated_at->toDateTimeString(),
-            'signed_at' => $this->signed_at->toDateTimeString(),
-            'terminated_at' => $this->terminated_at->toDateTimeString(),
+            'created_at' => $this->created_at->toDateTimeString(),
+            'terminated_at' => $this->terminated_at ?  $this->terminated_at->toDateTimeString() : null,
+            'signed_at' => $this->signed_at ?  $this->signed_at->toDateTimeString() : null,
         ];
     }
 }

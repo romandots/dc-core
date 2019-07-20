@@ -16,7 +16,6 @@ $factory->define(\App\Models\Customer::class, static function (Faker $faker) {
     return [
         'name' => $faker->name,
         'person_id' => $faker->numerify('####'),
-        'contract_id' => $faker->numerify('####'),
         'seen_at' => \Carbon\Carbon::now(),
         'created_at' => \Carbon\Carbon::now(),
         'updated_at' => \Carbon\Carbon::now()

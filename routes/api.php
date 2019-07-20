@@ -38,7 +38,7 @@ Route::resource('instructors', 'InstructorController')
 Route::post('instructors/from_person', 'InstructorController@createFromPerson');
 
 Route::resource('customers', 'CustomerController')
-    ->only(['show', 'store', 'update', 'destroy']);
+    ->only(['show', 'store', 'destroy']);
 Route::post('customers/from_person', 'CustomerController@createFromPerson');
 
 Route::post('contracts/{contract}', 'ContractController@sign');
