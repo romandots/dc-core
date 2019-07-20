@@ -14,12 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Contract
- *
  * @package App\Models
  * @property int $id
  * @property string $serial
  * @property string $number
  * @property int $branch_id
+ * @property int customer_id
  * @property string $status [pending|signed|terminated]
  * @property \Carbon\Carbon $signed_at
  * @property \Carbon\Carbon $terminated_at

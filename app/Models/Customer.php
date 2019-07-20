@@ -20,7 +20,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $id
  * @property string $name
  * @property int $person_id
- * @property int $contract_id
  * @property \Carbon\Carbon $seen_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -58,10 +57,10 @@ class Customer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Contract|null
+     * @return \Illuminate\Database\Eloquent\Relations\hasOne|Contract|null
      */
-    public function contract(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function contract(): \Illuminate\Database\Eloquent\Relations\hasOne
     {
-        return $this->belongsTo(Contract::class);
+        return $this->hasOne(Contract::class);
     }
 }
