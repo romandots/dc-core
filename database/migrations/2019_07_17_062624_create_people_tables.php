@@ -118,6 +118,15 @@ class CreatePeopleTables extends Migration
                 ->on('people')
                 ->onDelete('restrict');
         });
+
+        Schema::table('users', static function (Blueprint $table) {
+            $table->unsignedInteger('person_id')->nullable()->index();
+
+            $table->foreign('person_id')
+                ->references('id')
+                ->on('people')
+                ->onDelete('restrict');
+        });
     }
 
     /**
@@ -126,10 +135,15 @@ class CreatePeopleTables extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', static function (Blueprint $table) {
+            $table->dropForeign('users_person_id_foreign');
+            $table->dropColumn('person_id');
+        });
+
         Schema::dropIfExists('students');
         Schema::dropIfExists('customers');
         Schema::dropIfExists('instructors');
-        Schema::dropIfExists('people');
         Schema::dropIfExists('contracts');
+        Schema::dropIfExists('people');
     }
 }

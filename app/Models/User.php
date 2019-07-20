@@ -21,6 +21,10 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Instructor $instructor
+ * @property-read \App\Models\Customer $customer
+ * @property-read \App\Models\Student $student
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User permission($permissions)
@@ -86,5 +90,37 @@ class User extends Authenticatable
     public function username(): string
     {
         return 'username';
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Person|null
+     */
+    public function person(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Person::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Instructor|null
+     */
+    public function instructor(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(Instructor::class, Person::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Customer|null
+     */
+    public function customer(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(Customer::class, Person::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Student|null
+     */
+    public function student(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(Student::class, Person::class);
     }
 }
