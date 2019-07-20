@@ -1,6 +1,6 @@
 <?php
 /**
- * File: StoreInstructorRequest.php
+ * File: StoreCustomerRequest.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
  * Date: 2019-07-19
  * Copyright (c) 2019
@@ -10,16 +10,15 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api;
 
-use App\Models\Instructor;
 use App\Models\Person;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class StoreInstructorRequest
+ * Class StoreCustomerRequest
  * @package App\Http\Requests\Api
  */
-class StoreInstructorRequest extends FormRequest
+class StoreCustomerRequest extends FormRequest
 {
     /**
      * @return array
@@ -27,19 +26,6 @@ class StoreInstructorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => [
-                'nullable',
-                'string'
-            ],
-            'status' => [
-                'required',
-                'string',
-                Rule::in(Instructor::STATUSES)
-            ],
-            'display' => [
-                'nullable',
-                'boolean'
-            ],
             'last_name' => [
                 'required',
                 'string'
@@ -49,11 +35,11 @@ class StoreInstructorRequest extends FormRequest
                 'string'
             ],
             'patronymic_name' => [
-                'nullable',
+                'required',
                 'string'
             ],
             'birth_date' => [
-                'nullable',
+                'required',
                 'string',
                 'date'
             ],
@@ -63,7 +49,7 @@ class StoreInstructorRequest extends FormRequest
                 Rule::in(Person::GENDER)
             ],
             'phone' => [
-                'nullable',
+                'required',
                 'string'
             ],
             'email' => [
@@ -104,33 +90,31 @@ class StoreInstructorRequest extends FormRequest
         $validated = $this->validated();
 
         $dto = new DTO\Person;
-        $dto->last_name = $validated['last_name'];
-        $dto->first_name = $validated['first_name'];
-        $dto->patronymic_name = $validated['patronymic_name'];
-        $dto->birth_date = $validated['birth_date'] ?? \Carbon\Carbon::parse($validated['birth_date']);
-        $dto->gender = $validated['gender'];
-        $dto->phone = isset($validated['phone']) ? \phone_format($validated['phone']) : null;
-        $dto->email = $validated['email'];
-        $dto->instagram_username = $validated['instagram_username'];
-        $dto->telegram_username = $validated['telegram_username'];
-        $dto->vk_url = $validated['vk_url'];
-        $dto->facebook_url = $validated['facebook_url'];
-        $dto->note = $validated['note'];
+        $dto->last_name = $validated['last_name'] ?? $validated['last_name'];
+        $dto->first_name = $validated['first_name'] ?? $validated['first_name'];
+        $dto->patronymic_name = $validated['patronymic_name'] ?? $validated['patronymic_name'];
+        $dto->birth_date = $validated['birth_date'] ? \Carbon\Carbon::parse($validated['birth_date']) : null;
+        $dto->gender = $validated['gender'] ?? null;
+        $dto->phone = $validated['phone'] ? \phone_format($validated['phone']) : null;
+        $dto->email = $validated['email'] ?? $validated['email'];
+        $dto->instagram_username = $validated['instagram_username'] ?? $validated['instagram_username'];
+        $dto->telegram_username = $validated['telegram_username'] ?? $validated['telegram_username'];
+        $dto->vk_url = $validated['vk_url'] ?? $validated['vk_url'];
+        $dto->facebook_url = $validated['facebook_url'] ?? $validated['facebook_url'];
+        $dto->note = $validated['note'] ?? $validated['note'];
 
         return $dto;
     }
 
     /**
-     * @return DTO\Instructor
+     * @return DTO\Customer
      */
-    public function getInstructorDto(): DTO\Instructor
+    public function getCustomerDto(): DTO\Customer
     {
         $validated = $this->validated();
 
-        $dto = new DTO\Instructor;
-        $dto->description = $validated['description'];
-        $dto->status = $validated['status'];
-        $dto->display = (bool)$validated['display'];
+        $dto = new DTO\Customer;
+        $dto->person_id = $validated['person_id'];
 
         return $dto;
     }

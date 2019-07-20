@@ -23,8 +23,10 @@ trait CreatesFakeStudent
      */
     private function createFakeStudent(array $attributes = []): Student
     {
-        $person = $this->createFakePerson();
-        $attributes['person_id'] = $person->id;
+        if (!isset($attributes['person_id'])) {
+            $person = $this->createFakePerson();
+            $attributes['person_id'] = $person->id;
+        }
         $attributes['customer_id'] = null;
 
         return \factory(Student::class)->create($attributes);

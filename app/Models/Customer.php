@@ -45,6 +45,10 @@ class Customer extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'seen_at' => 'date'
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Person|null
      */

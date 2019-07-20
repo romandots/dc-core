@@ -31,12 +31,12 @@ class CustomerResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'person' => $this->whenLoaded('person', function () {
-                return $this->person;
+                return new PersonResource($this->person);
             }),
             'contract' => $this->whenLoaded('contract', function () {
-                return $this->contract;
+                return new ContractResource($this->contract);
             }),
-            'seen_at' => $this->seen_at->toDateTimeString(),
+            'seen_at' => $this->seen_at ?  $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];
     }

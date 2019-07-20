@@ -1,6 +1,6 @@
 <?php
 /**
- * File: InstructorTest.php
+ * File: CustomerTest.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
  * Date: 2019-07-19
  * Copyright (c) 2019
@@ -9,28 +9,23 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Traits\CreatesFakeInstructor;
+use Tests\Traits\CreatesFakeCustomer;
 use Tests\Traits\CreatesFakePerson;
 
 /**
  * Class PersonTest
  */
-class InstructorTest extends \Tests\TestCase
+class CustomerTest extends \Tests\TestCase
 {
-    use WithFaker, RefreshDatabase, CreatesFakePerson, CreatesFakeInstructor;
+    use WithFaker, RefreshDatabase, CreatesFakePerson, CreatesFakeCustomer;
 
-    protected const URL = '/api/instructors';
+    protected const URL = '/api/customers';
 
     protected const JSON_STRUCTURE = [
         'data' => [
             'id',
             'name',
             'person',
-            'description',
-            'picture',
-            'display',
-            'status',
-            'status_label',
             'seen_at',
             'created_at',
         ]
@@ -44,18 +39,18 @@ class InstructorTest extends \Tests\TestCase
 
     public function testShow(): void
     {
-        $instructor = $this->createFakeInstructor(['status' => \App\Models\Instructor::STATUS_HIRED]);
-        $person = $instructor->person;
+        $customer = $this->createFakeCustomer();
+        $person = $customer->person;
 
-        $url = self::URL . '/' . $instructor->id;
+        $url = self::URL . '/' . $customer->id;
 
         $this
             ->get($url)
             ->assertOk()
             ->assertJson([
                 'data' => [
-                    'id' => $instructor->id,
-                    'name' => $instructor->name,
+                    'id' => $customer->id,
+                    'name' => $customer->name,
                     'person' => [
                         'id' => $person->id,
                         'last_name' => $person->last_name,
@@ -76,10 +71,8 @@ class InstructorTest extends \Tests\TestCase
                         'note' => $person->note,
                         'created_at' => $person->created_at->toDateTimeString()
                     ],
-                    'status' => $instructor->status,
-                    'status_label' => \trans($instructor->status),
-                    'seen_at' => $instructor->seen_at->toDateTimeString(),
-                    'created_at' => $instructor->created_at->toDateTimeString()
+                    'seen_at' => $customer->seen_at->toDateTimeString(),
+                    'created_at' => $customer->created_at->toDateTimeString()
                 ]
             ]);
     }
@@ -87,9 +80,6 @@ class InstructorTest extends \Tests\TestCase
     public function testStore(): void
     {
         $data = [
-            'status' => \App\Models\Instructor::STATUS_HIRED,
-            'description' => 'Some teacher info',
-            'display' => true,
             'last_name' => 'Иванов',
             'first_name' => 'Иван',
             'patronymic_name' => 'Иванович',
@@ -110,10 +100,6 @@ class InstructorTest extends \Tests\TestCase
             ->assertJsonStructure(self::JSON_STRUCTURE)
             ->assertJson([
                 'data' => [
-                    'status' => \App\Models\Instructor::STATUS_HIRED,
-                    'status_label' => \trans(\App\Models\Instructor::STATUS_HIRED),
-                    'description' => 'Some teacher info',
-                    'display' => true,
                     'name' => 'Иванов Иван',
                     'person' =>
                         [
@@ -157,20 +143,34 @@ class InstructorTest extends \Tests\TestCase
         return [
             [
                 [
-                    'status' => 'impossible',
-                    'display' => true
+                    'last_name' => 'Иванов',
+                    'first_name' => 'Иван',
+                    'patronymic_name' => 'Иванович',
+                    'phone' => '8-999-999-99-99'
                 ],
             ],
             [
                 [
-                    'description' => 'Описание',
-                    'display' => true
+                    'first_name' => 'Иван',
+                    'patronymic_name' => 'Иванович',
+                    'birth_date' => '1986-01-08',
+                    'phone' => '8-999-999-99-99'
                 ],
             ],
             [
                 [
-                    'status' => 'hired',
-                    'display' => 'true'
+                    'last_name' => 'Иванов',
+                    'first_name' => 'Иван',
+                    'birth_date' => '1986-01-08',
+                    'phone' => '8-999-999-99-99'
+                ],
+            ],
+            [
+                [
+                    'last_name' => 'Иванов',
+                    'first_name' => 'Иван',
+                    'patronymic_name' => 'Иванович',
+                    'birth_date' => '1986-01-08'
                 ],
             ],
         ];
@@ -181,9 +181,6 @@ class InstructorTest extends \Tests\TestCase
     {
         $person = $this->createFakePerson();
         $data = [
-            'status' => \App\Models\Instructor::STATUS_HIRED,
-            'description' => 'Some teacher info',
-            'display' => true,
             'person_id' => $person->id,
         ];
         $url = self::URL . '/from_person';
@@ -194,10 +191,6 @@ class InstructorTest extends \Tests\TestCase
             ->assertJsonStructure(self::JSON_STRUCTURE)
             ->assertJson([
                 'data' => [
-                    'name' => "{$person->last_name} {$person->first_name}",
-                    'status' => \App\Models\Instructor::STATUS_HIRED,
-                    'description' => 'Some teacher info',
-                    'display' => true,
                     'person' => [
                         'id' => $person->id,
                         'last_name' => $person->last_name,
@@ -222,115 +215,18 @@ class InstructorTest extends \Tests\TestCase
             ]);
     }
 
-    public function testUpdate(): void
-    {
-        $data = [
-            'status' => \App\Models\Instructor::STATUS_FIRED,
-            'description' => 'Some other info',
-            'display' => false,
-        ];
-
-        $instructor = $this->createFakeInstructor([
-            'status' => \App\Models\Instructor::STATUS_HIRED,
-            'description' => 'Some teacher info',
-            'display' => true,
-        ]);
-        $person = $instructor->person;
-
-        $url = self::URL . '/' . $instructor->id;
-
-        $this
-            ->patch($url, $data)
-            ->assertStatus(200)
-            ->assertJsonStructure(self::JSON_STRUCTURE)
-            ->assertJson([
-                'data' => [
-                    'id' => $instructor->id,
-                    'name' => $instructor->name,
-                    'status' => \App\Models\Instructor::STATUS_FIRED,
-                    'status_label' => \trans(\App\Models\Instructor::STATUS_FIRED),
-                    'description' => 'Some other info',
-                    'display' => false,
-                    'person' => [
-                        'id' => $person->id,
-                        'last_name' => $person->last_name,
-                        'first_name' => $person->first_name,
-                        'patronymic_name' => $person->patronymic_name,
-                        'birth_date' => $person->birth_date->toDateString(),
-                        'gender' => $person->gender,
-                        'phone' => $person->phone,
-                        'email' => $person->email,
-                        'picture' => $person->picture,
-                        'picture_thumb' => $person->picture_thumb,
-                        'instagram_username' => $person->instagram_username,
-                        'telegram_username' => $person->telegram_username,
-                        'vk_uid' => $person->vk_uid,
-                        'vk_url' => $person->vk_url,
-                        'facebook_uid' => $person->facebook_uid,
-                        'facebook_url' => $person->facebook_url,
-                        'note' => $person->note,
-                        'created_at' => $person->created_at->toDateTimeString()
-                    ],
-                    'seen_at' => $instructor->seen_at->toDateTimeString(),
-                    'created_at' => $instructor->created_at->toDateTimeString()
-                ]
-            ]);
-    }
-
-    /**
-     * @param array $data
-     * @dataProvider provideInvalidUpdateData
-     */
-    public function testInvalidUpdate(array $data): void
-    {
-        $instructor = $this->createFakeInstructor();
-
-        $url = self::URL . '/' . $instructor->id;
-
-        $this
-            ->patch($url, $data)
-            ->assertStatus(422);
-    }
-
-    /**
-     * @return array
-     */
-    public function provideInvalidUpdateData(): array
-    {
-        return [
-            [
-                [
-                    'status' => 'impossible',
-                    'display' => true
-                ],
-            ],
-            [
-                [
-                    'description' => 'Описание',
-                    'display' => true
-                ],
-            ],
-            [
-                [
-                    'status' => 'hired',
-                    'display' => 'true'
-                ],
-            ],
-        ];
-    }
-
     public function testDestroy(): void
     {
-        $instructor = $this->createFakeInstructor();
-        $person = $instructor->person;
+        $customer = $this->createFakeCustomer();
+        $person = $customer->person;
 
-        $url = self::URL . '/' . $instructor->id;
+        $url = self::URL . '/' . $customer->id;
 
         $this
             ->delete($url)
             ->assertOk();
 
         $this->assertDatabaseHas(\App\Models\Person::TABLE, ['id' => $person->id]);
-        $this->assertDatabaseMissing(\App\Models\Instructor::TABLE, ['id' => $instructor->id]);
+        $this->assertDatabaseMissing(\App\Models\Customer::TABLE, ['id' => $customer->id]);
     }
 }

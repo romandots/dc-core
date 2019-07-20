@@ -1,6 +1,6 @@
 <?php
 /**
- * File: CreatesFakeInstructor.php
+ * File: CreatesFakeCustomer.php
  * Author: Roman Dots <ram.d.kreiz@gmail.com>
  * Date: 2019-07-19
  * Copyright (c) 2019
@@ -10,25 +10,24 @@ declare(strict_types=1);
 
 namespace Tests\Traits;
 
-use App\Models\Instructor;
-
 /**
- * Class CreatesFakeInstructor
+ * Trait CreatesFakeCustomer
  * @package Tests\Traits
  */
-trait CreatesFakeInstructor
+trait CreatesFakeCustomer
 {
     /**
-     * @param array $attributes
-     * @return Instructor
+     * @param array|null $attributes
+     * @return \App\Models\Customer
      */
-    private function createFakeInstructor(array $attributes = []): Instructor
+    private function createFakeCustomer(array $attributes = []): \App\Models\Customer
     {
         if (!isset($attributes['person_id'])) {
             $person = $this->createFakePerson();
             $attributes['person_id'] = $person->id;
+            $attributes['contract_id'] = null;
         }
 
-        return \factory(Instructor::class)->create($attributes);
+        return \factory(\App\Models\Customer::class)->create($attributes);
     }
 }

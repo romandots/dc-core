@@ -40,7 +40,8 @@ class StorePersonRequest extends FormRequest
             ],
             'birth_date' => [
                 'nullable',
-                'string'
+                'string',
+                'date'
             ],
             'gender' => [
                 'nullable',

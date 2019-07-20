@@ -36,3 +36,7 @@ Route::post('students/from_person', 'StudentController@createFromPerson');
 Route::resource('instructors', 'InstructorController')
     ->only(['show', 'store', 'update', 'destroy']);
 Route::post('instructors/from_person', 'InstructorController@createFromPerson');
+
+Route::resource('customers', 'CustomerController')
+    ->only(['show', 'store', 'update', 'destroy']);
+Route::post('customers/from_person', 'CustomerController@createFromPerson');
