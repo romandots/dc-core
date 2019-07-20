@@ -37,6 +37,7 @@ class InstructorResource extends JsonResource
             'display' => (bool)$this->display,
             'status' => $this->status,
             'status_label' => \trans($this->status),
+            'permissions' => $this->getPermissionNames(),
             'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];

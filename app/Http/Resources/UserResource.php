@@ -40,14 +40,15 @@ class UserResource extends JsonResource
                 return new CustomerResource($this->customer);
             }),
             'is_instructor' => $this->whenLoaded('instructor', function () {
-                return (bool)$this->instructor;
+                return null !== $this->instructor;
             }),
             'is_student' => $this->whenLoaded('student', function () {
-                return (bool)$this->student;
+                return null !== $this->student;
             }),
             'is_customer' => $this->whenLoaded('customer', function () {
-                return (bool)$this->customer;
+                return null !== $this->customer;
             }),
+            'permissions' => $this->getPermissionNames(),
             'created_at' => $this->created_at ? $this->created_at->toDateTimeString() : '',
             'approved_at' => $this->approved_at ? $this->approved_at->toDateTimeString() : '',
             'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : '',

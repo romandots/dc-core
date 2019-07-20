@@ -45,22 +45,28 @@ class PersonResource extends JsonResource
             'facebook_url' => $this->facebook_url,
             'note' => $this->note,
             'customer' => $this->whenLoaded('customer', function () {
-                return $this->customer;
+                return new CustomerResource($this->customer);
             }),
             'student' => $this->whenLoaded('student', function () {
-                return $this->student;
+                return new StudentResource($this->student);
             }),
             'instructor' => $this->whenLoaded('instructor', function () {
-                return $this->instructor;
+                return new InstructorResource($this->instructor);
+            }),
+            'user' => $this->whenLoaded('user', function () {
+                return new UserResource($this->user);
             }),
             'is_customer' => $this->whenLoaded('customer', function () {
-                return (bool)$this->customer;
+                return null !== $this->customer;
             }),
             'is_student' => $this->whenLoaded('student', function () {
-                return (bool)$this->student;
+                return null !== $this->student;
             }),
             'is_instructor' => $this->whenLoaded('instructor', function () {
-                return (bool)$this->instructor;
+                return null !== $this->instructor;
+            }),
+            'is_user' => $this->whenLoaded('user', function () {
+                return null !== $this->user;
             }),
             'created_at' => $this->created_at->toDateTimeString()
         ];

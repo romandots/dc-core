@@ -36,6 +36,7 @@ class CustomerResource extends JsonResource
             'contract' => $this->whenLoaded('contract', function () {
                 return new ContractResource($this->contract);
             }),
+            'permissions' => $this->getPermissionNames(),
             'seen_at' => $this->seen_at ?  $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];

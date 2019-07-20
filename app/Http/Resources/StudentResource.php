@@ -39,6 +39,7 @@ class StudentResource extends JsonResource
             'card_number' => $this->card_number,
             'status' => $this->status,
             'status_label' => \trans($this->status),
+            'permissions' => $this->getPermissionNames(),
             'seen_at' => $this->seen_at ? $this->seen_at->toDateTimeString() : null,
             'created_at' => $this->created_at->toDateTimeString()
         ];
