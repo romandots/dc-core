@@ -41,5 +41,6 @@ Route::resource('customers', 'CustomerController')
     ->only(['show', 'store', 'destroy']);
 Route::post('customers/from_person', 'CustomerController@createFromPerson');
 
+Route::get('contracts/{contract}', 'ContractController@show');
 Route::post('contracts/{contract}', 'ContractController@sign');
 Route::delete('contracts/{contract}', 'ContractController@terminate');

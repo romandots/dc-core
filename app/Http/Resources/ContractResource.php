@@ -31,11 +31,17 @@ class ContractResource extends JsonResource
             'serial' => $this->serial,
             'number' => $this->number,
             'branch_id' => $this->branch_id,
+            'customer' => $this->whenLoaded('customer', function () {
+                return new CustomerResource($this->customer);
+            }),
             'status' => $this->status,
             'status_label' => \trans($this->status),
+            'is_signed' => (bool)$this->signed_at,
+            'is_terminated' => (bool)$this->terminated_at,
+            'is_pending' => null === $this->terminated_at && null === $this->signed_at,
             'created_at' => $this->created_at->toDateTimeString(),
-            'terminated_at' => $this->terminated_at ?  $this->terminated_at->toDateTimeString() : null,
             'signed_at' => $this->signed_at ?  $this->signed_at->toDateTimeString() : null,
+            'terminated_at' => $this->terminated_at ?  $this->terminated_at->toDateTimeString() : null,
         ];
     }
 }

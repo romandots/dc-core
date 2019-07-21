@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $branch_id
  * @property int customer_id
  * @property string $status [pending|signed|terminated]
+ * @property \App\Models\Customer $customer
  * @property \Carbon\Carbon $signed_at
  * @property \Carbon\Carbon $terminated_at
  * @property \Carbon\Carbon $created_at
@@ -46,4 +47,12 @@ class Contract extends Model
     protected $table = self::TABLE;
 
     protected $fillable = [];
+
+    /**
+     * @return Contract|\Illuminate\Database\Eloquent\Relations\BelongsTo|Customer
+     */
+    public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Customer::class)->with('person');
+    }
 }
