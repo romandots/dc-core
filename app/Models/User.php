@@ -35,6 +35,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $name
  * @property string $username
  * @property string $password
+ * @property int $person_id
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $approved_at
  * @property \Illuminate\Support\Carbon|null $seen_at
@@ -53,6 +54,10 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use Notifiable, HasRoles;
+
+    public const TABLE = 'users';
+
+    protected $table = self::TABLE;
 
     /**
      * The attributes that are mass assignable.
@@ -97,30 +102,30 @@ class User extends Authenticatable
      */
     public function person(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Person::class)->with('student', 'customer', 'instructor');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Instructor|null
+     * @return Customer|null
      */
-    public function instructor(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function getCustomerAttribute(): ?Customer
     {
-        return $this->hasOneThrough(Instructor::class, Person::class);
+        return $this->person ? $this->person->customer : null;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Customer|null
+     * @return Student|null
      */
-    public function customer(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function getStudentAttribute(): ?Student
     {
-        return $this->hasOneThrough(Customer::class, Person::class);
+        return $this->person ? $this->person->student : null;
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough|Student|null
+     * @return Instructor|null
      */
-    public function student(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    public function getInstructorAttribute(): ?Instructor
     {
-        return $this->hasOneThrough(Student::class, Person::class);
+        return $this->person ? $this->person->instructor : null;
     }
 }

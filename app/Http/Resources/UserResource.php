@@ -28,8 +28,12 @@ class UserResource extends JsonResource
     public function toArray($request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
+            'person' => $this->whenLoaded('person', function () {
+                return new PersonResource($this->person);
+            }),
             'instructor' => $this->whenLoaded('instructor', function () {
                 return new InstructorResource($this->instructor);
             }),

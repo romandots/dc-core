@@ -19,3 +19,35 @@ if (!function_exists('phone_format')) {
         return \preg_replace('/^([78]?)(\d{3})(\d{3})(\d{2})(\d+)/', '+7-\2-\3-\4-\5', $digits);
     }
 }
+
+if (!function_exists('format_validation_errors')) {
+    /**
+     * @param array $failed
+     * @return array
+     */
+    function format_validation_errors(array $failed): array
+    {
+        $errors = [];
+
+        foreach ($failed as $field => $rules) {
+            $errors[$field] = [];
+
+            foreach ((array)$rules as $rule => $ruleData) {
+                $ruleName = Illuminate\Support\Str::snake($rule);
+                if ('unique' === $ruleName || 'exists' === $ruleName) {
+                    $ruleData = [];
+                }
+
+                $newRule = ['name' => $ruleName];
+
+                if (0 !== \count($ruleData)) {
+                    $newRule['params'] = $ruleData;
+                }
+
+                $errors[$field][] = $newRule;
+            }
+        }
+
+        return $errors;
+    }
+}

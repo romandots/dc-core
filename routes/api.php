@@ -26,20 +26,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('users/from_person', 'UserController@createFromPerson');
+Route::patch('users/{id}/password', 'UserController@updatePassword');
+Route::resource('users', 'UserController')
+    ->only(['show', 'store', 'update', 'destroy']);
+
 Route::resource('people', 'PersonController')
     ->only(['show', 'store', 'update', 'destroy']);
 
+Route::post('students/from_person', 'StudentController@createFromPerson');
 Route::resource('students', 'StudentController')
     ->only(['show', 'store', 'update', 'destroy']);
-Route::post('students/from_person', 'StudentController@createFromPerson');
 
+Route::post('instructors/from_person', 'InstructorController@createFromPerson');
 Route::resource('instructors', 'InstructorController')
     ->only(['show', 'store', 'update', 'destroy']);
-Route::post('instructors/from_person', 'InstructorController@createFromPerson');
 
+Route::post('customers/from_person', 'CustomerController@createFromPerson');
 Route::resource('customers', 'CustomerController')
     ->only(['show', 'store', 'destroy']);
-Route::post('customers/from_person', 'CustomerController@createFromPerson');
 
 Route::get('contracts/{contract}', 'ContractController@show');
 Route::post('contracts/{contract}', 'ContractController@sign');
