@@ -117,6 +117,11 @@ class CustomerController extends Controller
     public function destroy(int $id): void
     {
         $customer = $this->customerRepository->find($id);
-        $this->customerRepository->delete($customer);
+        \DB::transaction(function () use ($customer) {
+            if (null !== $customer->contract) {
+                $this->contractRepository->delete($customer->contract);
+            }
+            $this->customerRepository->delete($customer);
+        });
     }
 }

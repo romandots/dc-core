@@ -229,5 +229,6 @@ class CustomerTest extends \Tests\TestCase
 
         $this->assertDatabaseHas(\App\Models\Person::TABLE, ['id' => $person->id]);
         $this->assertDatabaseMissing(\App\Models\Customer::TABLE, ['id' => $customer->id]);
+        $this->assertDatabaseMissing(\App\Models\Contract::TABLE, ['customer_id' => $customer->id]);
     }
 }
