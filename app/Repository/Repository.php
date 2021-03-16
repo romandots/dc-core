@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 abstract class Repository
 {
     public const WITH_SOFT_DELETES = false;
-    public const SEARCHABLE_ATTRIBUTES = [];
 
     abstract protected function getQuery(): \Illuminate\Database\Eloquent\Builder;
+    abstract protected function getSearchableAttributes(): array;
 
     protected function getFilterQuery(FilteredInterface $filter): \Illuminate\Database\Eloquent\Builder
     {
@@ -21,10 +21,10 @@ abstract class Repository
             $query->whereNull('deleted_at');
         }
 
-        if ($filter->query && count(self::SEARCHABLE_ATTRIBUTES) > 0) {
+        if ($filter->query && count($this->getSearchableAttributes()) > 0) {
             $query->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($filter) {
                 $searchQuery = $filter->getQuery() . '%';
-                $attributes = self::SEARCHABLE_ATTRIBUTES;
+                $attributes = $this->getSearchableAttributes();
                 $firstAttribute = array_shift($attributes);
                 $query->where($firstAttribute, 'ILIKE', $searchQuery);
                 foreach ($attributes as $attribute) {
