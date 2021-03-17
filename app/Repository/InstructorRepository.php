@@ -29,6 +29,11 @@ class InstructorRepository extends Repository
         'description',
     ];
 
+    protected function getSearchableAttributes(): array
+    {
+        return self::SEARCHABLE_ATTRIBUTES;
+    }
+
     protected function getQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return Instructor::query();
