@@ -97,8 +97,9 @@ class VerificationService
      * @throws Exceptions\VerificationCodeAlreadySentRecently
      * @throws Exceptions\TextMessageSendingFailed
      * @throws \Exception
+     * @return string
      */
-    public function initNewVerificationCode(string $phoneNumber): void
+    public function initNewVerificationCode(string $phoneNumber): string
     {
         if ($this->config['max_tries'] < $this->codeRepository->countByPhoneNumber($phoneNumber)) {
             throw new Exceptions\VerificationCodeWasSentTooManyTimes($this->config['max_tries']);
@@ -114,6 +115,8 @@ class VerificationService
             $this->codeRepository->create($phoneNumber, $code);
             $this->sendVerificationCode($phoneNumber, $code);
         });
+
+        return (string)$code;
     }
 
     /**

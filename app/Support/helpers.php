@@ -199,3 +199,10 @@ if (!function_exists('format_pagination')) {
         ];
     }
 }
+
+if (!function_exists('is_production_mode')) {
+    function is_production_mode(): bool
+    {
+        return 'production' === config('app.env');
+    }
+}
