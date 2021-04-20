@@ -24,6 +24,7 @@ class ResetPasswordRequest extends FormRequest
     public function __construct(VerificationCodeRepository $verificationCodes)
     {
         $this->verificationCodes = $verificationCodes;
+        parent::__construct();
     }
 
     public function rules(): array

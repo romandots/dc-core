@@ -74,4 +74,9 @@ class VisitRepository extends Repository
     {
         return Visit::query();
     }
+
+    protected function getSearchableAttributes(): array
+    {
+        return [];
+    }
 }

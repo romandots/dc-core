@@ -34,6 +34,7 @@ class RegisterUserRequest extends FormRequest
     public function __construct(VerificationCodeRepository $verificationCodes)
     {
         $this->verificationCodes = $verificationCodes;
+        parent::__construct();
     }
 
     /**
