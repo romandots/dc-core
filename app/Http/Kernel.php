@@ -22,6 +22,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -44,6 +45,7 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'user_has_person' => \App\Http\Middleware\UserHasPerson::class,
+        'cors' => \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -57,6 +59,7 @@ class Kernel extends HttpKernel
 //        \App\Http\Middleware\Authenticate::class,
 //        \Illuminate\Session\Middleware\AuthenticateSession::class,
 //        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Fruitcake\Cors\HandleCors::class,
         \Illuminate\Auth\Middleware\Authorize::class,
     ];
 
@@ -66,6 +69,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'api' => [
+            'cors',
             'prefer_json:1',
         ],
 
