@@ -83,22 +83,22 @@ class BaseExceptionHandler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      * @param \Illuminate\Http\Request $request
-     * @param \Exception $exception
+     * @param \Exception $e
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function render($request, \Exception $exception)
+    public function render($request, \Throwable $e)
     {
         $needJson = $request->expectsJson() || $this->isApiRequest($request);
 
         if ($needJson) {
             foreach ($this->computedHandlers as $key => $handler) {
-                if ($exception instanceof $key) {
-                    return $handler($exception, $request);
+                if ($e instanceof $key) {
+                    return $handler($e, $request);
                 }
             }
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
     /**
